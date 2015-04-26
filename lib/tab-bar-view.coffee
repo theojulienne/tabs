@@ -9,7 +9,7 @@ TabView = require './tab-view'
 module.exports =
 class TabBarView extends View
   @content: ->
-    @ul tabindex: -1, class: "list-inline tab-bar inset-panel"
+    @ul tabindex: -1, class: "list-inline tab-bar inset-panel", role: "tablist"
 
   initialize: (@pane) ->
     @subscriptions = new CompositeDisposable
@@ -126,8 +126,11 @@ class TabBarView extends View
 
   setActiveTab: (tabView) ->
     if tabView? and not tabView.classList.contains('active')
-      @element.querySelector('.tab.active')?.classList.remove('active')
+      previousTab = @element.querySelector('.tab.active')
+      previousTab?.classList.remove('active')
+      previousTab?.setAttribute('aria-selected', false)
       tabView.classList.add('active')
+      tabView.setAttribute('aria-selected', true)
 
   updateActiveTab: ->
     @setActiveTab(@tabForItem(@pane.getActiveItem()))

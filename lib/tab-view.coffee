@@ -6,6 +6,14 @@ class TabView extends HTMLElement
   initialize: (@item) ->
     @classList.add('tab', 'sortable')
 
+    # accessibility: this is a tab, and we bind to
+    @setAttribute('role', 'tab')
+    textEditorView = atom.views.getView(@item)
+    if textEditorView
+      # FIXME: convert internal ID to HTML "id" attribute for aria reference, is there a better way?
+      textEditorView.id = 'atom-id-' + @item.id
+      @setAttribute('aria-controls', textEditorView.id)
+
     @itemTitle = document.createElement('div')
     @itemTitle.classList.add('title')
     @appendChild(@itemTitle)
